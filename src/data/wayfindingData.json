@@ -680,6 +680,14 @@
       "description": "Punto de partida de la visita guiada en el frente sur sobre la Carrera 3. Acceso principal al Antiguo Convento de San Francisco.",
       "historicalNote": "Edificado en 1756 por la orden franciscana y transformado en 1825 por decreto del Libertador Simón Bolívar en el primer colegio republicano.",
       "audioText": "Bienvenido a la Estación 1: El Pórtico Colonial Sur sobre la Carrera 3. Aquí inicia nuestro recorrido guiado por el Antiguo Convento de San Francisco, hoy sede del Vicerrectorado de Producción Agrícola de la UNELLEZ. Avanza por el pasillo azul hacia el norte para entrar a la Estación 2: el Patio Central del Claustro.",
+      "media": [
+        {
+          "id": "media-est1-ref",
+          "type": "image",
+          "url": "/campus-vpa.jpg",
+          "caption": "Vista de referencia del Recinto Universitario VPA (Antiguo Convento de San Francisco)"
+        }
+      ],
       "x": 340,
       "y": 900,
       "walkwayX": 340,

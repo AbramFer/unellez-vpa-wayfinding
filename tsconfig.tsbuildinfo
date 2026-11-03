@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/adminpanel.tsx","./src/components/interactiveaerialmap.tsx","./src/components/qrmodalandgenerator.tsx","./src/types/wayfinding.ts"],"version":"5.6.2"}
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/adminpanel.tsx","./src/components/interactiveaerialmap.tsx","./src/components/mediagalleryviewer.tsx","./src/components/qrmodalandgenerator.tsx","./src/types/wayfinding.ts"],"version":"5.6.2"}

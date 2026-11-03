@@ -24,6 +24,7 @@ import {
   WayfindingBlock,
   WayfindingDataset
 } from '../types/wayfinding';
+import { MediaGalleryViewer } from './MediaGalleryViewer';
 
 export type SelectedEntity =
   | { type: 'block'; item: WayfindingBlock }
@@ -1129,6 +1130,13 @@ export const InteractiveAerialMap: React.FC<InteractiveMapProps> = ({
               <p className="text-xs font-semibold text-blue-600 mb-2">
                 {selected.item.subtitle}
               </p>
+
+              {/* Photo / Video Reference Gallery */}
+              <MediaGalleryViewer
+                media={selected.item.media}
+                title={selected.item.name}
+              />
+
               <p className="text-xs text-slate-600 leading-relaxed mb-3.5">
                 {selected.item.description}
               </p>
@@ -1230,6 +1238,13 @@ export const InteractiveAerialMap: React.FC<InteractiveMapProps> = ({
               <p className="text-xs font-semibold text-indigo-600 mb-2">
                 {selected.item.subtitle}
               </p>
+
+              {/* Photo / Video Reference Gallery */}
+              <MediaGalleryViewer
+                media={selected.item.media}
+                title={selected.item.name}
+              />
+
               <p className="text-xs text-slate-600 leading-relaxed mb-3">
                 {selected.item.description}
               </p>

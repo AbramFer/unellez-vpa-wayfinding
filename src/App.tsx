@@ -28,8 +28,8 @@ import {
 import { QrModalAndGenerator } from './components/QrModalAndGenerator';
 import { AdminPanel } from './components/AdminPanel';
 
-const STORAGE_KEY_DATASET = 'unellez_vpa_sketch_wayfinding_v8';
-const STORAGE_KEY_VISITED = 'unellez_vpa_sketch_visited_v8';
+const STORAGE_KEY_DATASET = 'unellez_vpa_sketch_wayfinding_v9';
+const STORAGE_KEY_VISITED = 'unellez_vpa_sketch_visited_v9';
 // SHA-256 hash of the administrator password so it is not stored in plain text
 const ADMIN_PASSWORD_SHA256 =
   'fc189e8c3993de6529d7679857d2d2c062d0a6e78546fde2646b89e7f080dffa';
@@ -44,14 +44,17 @@ async function sha256Hex(text: string): Promise<string> {
 }
 
 export default function App() {
-  const [dataset, setDataset] = useState<WayfindingDataset>(
-    () => initialDataJson as WayfindingDataset
-  );
-
-  // Sync automatically whenever wayfindingData.json is updated in development
-  useEffect(() => {
-    setDataset(initialDataJson as WayfindingDataset);
-  }, [initialDataJson]);
+  const [dataset, setDataset] = useState<WayfindingDataset>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_DATASET);
+      if (saved) {
+        return JSON.parse(saved) as WayfindingDataset;
+      }
+    } catch {
+      // fallback to initialDataJson
+    }
+    return initialDataJson as WayfindingDataset;
+  });
 
   const [visitedStationIds, setVisitedStationIds] = useState<string[]>(() => {
     try {

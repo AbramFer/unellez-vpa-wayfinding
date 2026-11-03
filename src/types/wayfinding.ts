@@ -22,6 +22,13 @@ export interface SubOfficeItem {
   schedule?: string;
 }
 
+export interface MediaItem {
+  id: string;
+  type: 'image' | 'video';
+  url: string;
+  caption?: string;
+}
+
 export interface WayfindingBlock {
   id: string;
   code: string;
@@ -34,6 +41,8 @@ export interface WayfindingBlock {
   locationLabel: string;
   // Internal subdivisions (2 or more offices/cubicles inside the same box)
   subOffices: SubOfficeItem[];
+  // Optional photo / video reference gallery managed by the Administrator
+  media?: MediaItem[];
   // Coordinates on the 760 x 1020 vertical canvas matching your sketch
   x: number;
   y: number;
@@ -53,6 +62,8 @@ export interface TourLandmarkStation {
   description: string;
   historicalNote: string;
   audioText: string;
+  // Optional photo / video reference gallery managed by the Administrator
+  media?: MediaItem[];
   // Coordinates on the 760 x 1020 canvas
   x: number;
   y: number;
