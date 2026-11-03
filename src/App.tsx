@@ -11,7 +11,8 @@ import {
   DoorOpen,
   Lock,
   Eye,
-  EyeOff
+  EyeOff,
+  Layers
 } from 'lucide-react';
 import initialDataJson from './data/wayfindingData.json';
 import {
@@ -78,6 +79,7 @@ export default function App() {
     'all' | 'tour' | 'oficina' | 'aula' | 'estacionamiento' | 'bano'
   >('all');
   const [showTourIcons, setShowTourIcons] = useState<boolean>(true);
+  const [bgMode, setBgMode] = useState<'clean' | 'aerial' | 'sketch'>('clean');
   const [isQrModalOpen, setIsQrModalOpen] = useState<boolean>(false);
   const [isAdminMode, setIsAdminMode] = useState<boolean>(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState<boolean>(false);
@@ -694,6 +696,69 @@ export default function App() {
               );
             })}
           </div>
+
+          {/* Sidebar Bottom Footer: Map View Mode Selector & Legend */}
+          <div className="p-3 border-t border-slate-200/80 bg-slate-50/70 space-y-2.5 shrink-0">
+            {/* Map Background Mode Buttons */}
+            <div className="bg-slate-200/70 p-1 rounded-xl grid grid-cols-3 gap-1">
+              <button
+                onClick={() => setBgMode('clean')}
+                className={`py-1.5 px-2 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition ${
+                  bgMode === 'clean'
+                    ? 'bg-slate-900 text-white shadow-sm'
+                    : 'text-slate-600 hover:bg-white/60'
+                }`}
+              >
+                <Layers className="w-3 h-3 shrink-0" />
+                <span>Plano Limpio</span>
+              </button>
+              <button
+                onClick={() => setBgMode('aerial')}
+                className={`py-1.5 px-2 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition ${
+                  bgMode === 'aerial'
+                    ? 'bg-slate-900 text-white shadow-sm'
+                    : 'text-slate-600 hover:bg-white/60'
+                }`}
+              >
+                <Compass className="w-3 h-3 shrink-0" />
+                <span>Foto Aérea</span>
+              </button>
+              <button
+                onClick={() => setBgMode('sketch')}
+                className={`py-1.5 px-2 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition ${
+                  bgMode === 'sketch'
+                    ? 'bg-slate-900 text-white shadow-sm'
+                    : 'text-slate-600 hover:bg-white/60'
+                }`}
+              >
+                <span>Boceto Guía</span>
+              </button>
+            </div>
+
+            {/* Compact Color Legend */}
+            <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1 text-[10px] font-semibold text-slate-600">
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-sm bg-[#EF4444] border border-slate-900 inline-block" />
+                Oficinas / Aulas
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-sm bg-[#FDE047] border border-slate-900 inline-block" />
+                Estacionamiento
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-3 h-1.5 rounded-full bg-slate-200 border border-slate-300 inline-block" />
+                Pasillos
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-3 h-1 rounded-full bg-blue-600 inline-block" />
+                Ruta
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 inline-block" />
+                Tour QR
+              </span>
+            </div>
+          </div>
         </aside>
 
         {/* Interactive Map Area */}
@@ -710,6 +775,7 @@ export default function App() {
           onAdvanceToNextStation={handleAdvanceToNextStation}
           onOpenQr={() => setIsQrModalOpen(true)}
           isAdminMode={isAdminMode}
+          bgMode={bgMode}
           onUpdateBlockBox={handleUpdateBlockBox}
           onUpdateStationPos={handleUpdateStationPos}
         />

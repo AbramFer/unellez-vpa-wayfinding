@@ -262,3 +262,4 @@ export const MediaGalleryViewer: React.FC<MediaGalleryViewerProps> = ({
     </>
   );
 };
+
