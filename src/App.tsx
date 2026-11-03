@@ -12,7 +12,9 @@ import {
   Lock,
   Eye,
   EyeOff,
-  Layers
+  Layers,
+  Map as MapIcon,
+  ListFilter
 } from 'lucide-react';
 import initialDataJson from './data/wayfindingData.json';
 import {
@@ -80,6 +82,7 @@ export default function App() {
   >('all');
   const [showTourIcons, setShowTourIcons] = useState<boolean>(true);
   const [bgMode, setBgMode] = useState<'clean' | 'aerial' | 'sketch'>('clean');
+  const [mobileView, setMobileView] = useState<'map' | 'directory'>('map');
   const [isQrModalOpen, setIsQrModalOpen] = useState<boolean>(false);
   const [isAdminMode, setIsAdminMode] = useState<boolean>(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState<boolean>(false);
@@ -442,54 +445,63 @@ export default function App() {
   const totalFound = filteredStations.length + filteredBlocks.length;
 
   return (
-    <div className="h-screen w-screen overflow-hidden flex flex-col bg-[#EEF2F6]">
-      {/* Top White Header */}
-      <header className="h-[66px] shrink-0 bg-white border-b border-slate-200/80 px-5 flex items-center justify-between gap-4 z-30">
-        <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-sm shadow-blue-600/25">
-            <MapPin className="w-5 h-5" />
+    <div className="h-[100dvh] w-screen overflow-hidden flex flex-col bg-[#EEF2F6]">
+      {/* Top White Header (Responsive for Mobile & Desktop) */}
+      <header className="min-h-[56px] md:h-[66px] py-1.5 md:py-0 shrink-0 bg-white border-b border-slate-200/80 px-3 sm:px-5 flex items-center justify-between gap-2 sm:gap-4 z-30">
+        <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-sm shadow-blue-600/25 shrink-0">
+            <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
-          <div>
-            <h1 className="text-[16px] font-extrabold text-slate-900 leading-tight">
-              Directorio & Wayfinding — UNELLEZ VPA
+          <div className="min-w-0">
+            <h1 className="text-[13px] sm:text-[16px] font-extrabold text-slate-900 leading-tight truncate">
+              <span className="sm:hidden">UNELLEZ VPA — Wayfinding</span>
+              <span className="hidden sm:inline">
+                Directorio & Wayfinding — UNELLEZ VPA
+              </span>
             </h1>
-            <p className="text-xs text-slate-500 font-medium">
+            <p className="text-[10.5px] sm:text-xs text-slate-500 font-medium truncate">
               {dataset.subtitle}
             </p>
           </div>
         </div>
 
         {/* Right Controls */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           <button
             onClick={() => setShowTourIcons((v) => !v)}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition ${
+            className={`p-2 sm:px-3.5 sm:py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition ${
               showTourIcons
                 ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
                 : 'bg-slate-100 text-slate-600'
             }`}
+            title={showTourIcons ? 'Ocultar estaciones' : 'Mostrar estaciones'}
           >
             <Compass className="w-4 h-4" />
-            <span className="hidden md:inline">
+            <span className="hidden lg:inline">
               {showTourIcons ? 'Estaciones Visibles' : 'Mostrar Estaciones'}
             </span>
           </button>
 
           <button
             onClick={() => setIsQrModalOpen(true)}
-            className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition"
+            className="p-2 sm:px-3.5 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition"
+            title="Códigos QR"
           >
             <QrCode className="w-4 h-4 text-blue-600" />
             <span className="hidden sm:inline">Códigos QR</span>
           </button>
 
           <button
-            onClick={handleToggleAdminButton}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition ${
+            onClick={() => {
+              handleToggleAdminButton();
+              setMobileView('map');
+            }}
+            className={`p-2 sm:px-3.5 sm:py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition ${
               isAdminMode
                 ? 'bg-blue-600 text-white shadow-sm'
                 : 'bg-slate-100 hover:bg-slate-200/80 text-slate-700'
             }`}
+            title="Modo Administrador"
           >
             {isAdminMode ? (
               <Settings className="w-4 h-4" />
@@ -504,11 +516,11 @@ export default function App() {
       </header>
 
       {/* Guided Tour Ribbon (Estación 1 -> 2 -> 3 ... -> 8) */}
-      <div className="bg-white border-b border-slate-200/70 px-5 py-2 flex items-center justify-between gap-3 text-xs z-20 overflow-x-auto">
+      <div className="bg-white border-b border-slate-200/70 px-3 sm:px-5 py-1.5 sm:py-2 flex items-center justify-between gap-2 text-xs z-20 overflow-x-auto shrink-0">
         <div className="flex items-center gap-1.5 shrink-0">
-          <span className="font-extrabold text-indigo-700 uppercase tracking-wider text-[11px] flex items-center gap-1 mr-1">
+          <span className="font-extrabold text-indigo-700 uppercase tracking-wider text-[10px] sm:text-[11px] flex items-center gap-1 mr-1">
             <Compass className="w-3.5 h-3.5" />
-            Visita Guiada QR:
+            <span className="hidden xs:inline">Visita Guiada</span> QR:
           </span>
 
           {sortedStations.map((st, idx) => {
@@ -519,8 +531,11 @@ export default function App() {
             return (
               <React.Fragment key={st.id}>
                 <button
-                  onClick={() => handleSimulateScanStation(st)}
-                  className={`px-2.5 py-1 rounded-lg font-bold text-[11px] flex items-center gap-1.5 transition whitespace-nowrap border ${
+                  onClick={() => {
+                    handleSimulateScanStation(st);
+                    setMobileView('map');
+                  }}
+                  className={`px-2 sm:px-2.5 py-1 rounded-lg font-bold text-[10.5px] sm:text-[11px] flex items-center gap-1.5 transition whitespace-nowrap border ${
                     isSelected
                       ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
                       : isVisited
@@ -544,18 +559,22 @@ export default function App() {
         </div>
       </div>
 
-      {/* Main Split Workspace */}
+      {/* Main Split Workspace (Full-screen tabs on Mobile < md, Split Sidebar + Map on Desktop md+) */}
       <div className="flex-1 flex overflow-hidden relative">
         {/* Left Clean White Sidebar Directory */}
-        <aside className="w-[330px] sm:w-[365px] shrink-0 bg-white border-r border-slate-200/80 flex flex-col h-full z-20">
-          <div className="p-4 border-b border-slate-100 space-y-3">
+        <aside
+          className={`${
+            mobileView === 'directory' ? 'flex w-full' : 'hidden'
+          } md:flex md:w-[330px] lg:w-[365px] shrink-0 bg-white border-r border-slate-200/80 flex-col h-full z-20`}
+        >
+          <div className="p-3.5 sm:p-4 border-b border-slate-100 space-y-2.5 sm:space-y-3">
             <div className="relative">
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar oficina, cubículo, estación..."
+                placeholder="Buscar oficina, aula, baño, estación..."
                 className="w-full bg-slate-50 border border-slate-200/80 rounded-2xl pl-10 pr-8 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-500 transition"
               />
               {searchQuery && (
@@ -598,11 +617,13 @@ export default function App() {
             </div>
           </div>
 
-          <div className="px-4 py-2.5 flex items-center justify-between text-xs border-b border-slate-100 bg-slate-50/40">
+          <div className="px-4 py-2 flex items-center justify-between text-xs border-b border-slate-100 bg-slate-50/40">
             <span className="text-slate-500 font-medium">
               {totalFound} espacios encontrados
             </span>
-            <span className="text-blue-600 font-bold">Planta Baja VPA</span>
+            <span className="text-blue-600 font-bold">
+              Toca uno para ver en el mapa
+            </span>
           </div>
 
           {/* Scrollable Cards List */}
@@ -614,7 +635,10 @@ export default function App() {
               return (
                 <div
                   key={st.id}
-                  onClick={() => setSelected({ type: 'station', item: st })}
+                  onClick={() => {
+                    setSelected({ type: 'station', item: st });
+                    setMobileView('map');
+                  }}
                   className={`p-3.5 rounded-2xl border cursor-pointer transition group ${
                     isSelected
                       ? 'bg-indigo-50/50 border-indigo-500 shadow-sm'
@@ -646,7 +670,10 @@ export default function App() {
               return (
                 <div
                   key={block.id}
-                  onClick={() => setSelected({ type: 'block', item: block })}
+                  onClick={() => {
+                    setSelected({ type: 'block', item: block });
+                    setMobileView('map');
+                  }}
                   className={`p-3.5 rounded-2xl border cursor-pointer transition group ${
                     isSelected
                       ? 'bg-blue-50/40 border-blue-500 shadow-sm'
@@ -702,7 +729,10 @@ export default function App() {
             {/* Map Background Mode Buttons */}
             <div className="bg-slate-200/70 p-1 rounded-xl grid grid-cols-3 gap-1">
               <button
-                onClick={() => setBgMode('clean')}
+                onClick={() => {
+                  setBgMode('clean');
+                  setMobileView('map');
+                }}
                 className={`py-1.5 px-2 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition ${
                   bgMode === 'clean'
                     ? 'bg-slate-900 text-white shadow-sm'
@@ -713,7 +743,10 @@ export default function App() {
                 <span>Plano Limpio</span>
               </button>
               <button
-                onClick={() => setBgMode('aerial')}
+                onClick={() => {
+                  setBgMode('aerial');
+                  setMobileView('map');
+                }}
                 className={`py-1.5 px-2 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition ${
                   bgMode === 'aerial'
                     ? 'bg-slate-900 text-white shadow-sm'
@@ -724,7 +757,10 @@ export default function App() {
                 <span>Foto Aérea</span>
               </button>
               <button
-                onClick={() => setBgMode('sketch')}
+                onClick={() => {
+                  setBgMode('sketch');
+                  setMobileView('map');
+                }}
                 className={`py-1.5 px-2 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition ${
                   bgMode === 'sketch'
                     ? 'bg-slate-900 text-white shadow-sm'
@@ -762,23 +798,29 @@ export default function App() {
         </aside>
 
         {/* Interactive Map Area */}
-        <InteractiveAerialMap
-          dataset={dataset}
-          selected={selected}
-          currentHere={currentHere}
-          nextTourStation={nextTourStation}
-          visitedStationIds={visitedStationIds}
-          showTourIcons={showTourIcons}
-          onSelect={setSelected}
-          onSetHereFromBlock={handleSimulateScanBlock}
-          onSetHereFromStation={handleSimulateScanStation}
-          onAdvanceToNextStation={handleAdvanceToNextStation}
-          onOpenQr={() => setIsQrModalOpen(true)}
-          isAdminMode={isAdminMode}
-          bgMode={bgMode}
-          onUpdateBlockBox={handleUpdateBlockBox}
-          onUpdateStationPos={handleUpdateStationPos}
-        />
+        <div
+          className={`${
+            mobileView === 'map' ? 'flex' : 'hidden md:flex'
+          } flex-1 h-full overflow-hidden relative`}
+        >
+          <InteractiveAerialMap
+            dataset={dataset}
+            selected={selected}
+            currentHere={currentHere}
+            nextTourStation={nextTourStation}
+            visitedStationIds={visitedStationIds}
+            showTourIcons={showTourIcons}
+            onSelect={setSelected}
+            onSetHereFromBlock={handleSimulateScanBlock}
+            onSetHereFromStation={handleSimulateScanStation}
+            onAdvanceToNextStation={handleAdvanceToNextStation}
+            onOpenQr={() => setIsQrModalOpen(true)}
+            isAdminMode={isAdminMode}
+            bgMode={bgMode}
+            onUpdateBlockBox={handleUpdateBlockBox}
+            onUpdateStationPos={handleUpdateStationPos}
+          />
+        </div>
 
         {/* Floating Admin Panel */}
         {isAdminMode && (
@@ -797,6 +839,33 @@ export default function App() {
           />
         )}
       </div>
+
+      {/* Mobile Bottom Navigation Bar (< md) */}
+      <nav className="md:hidden h-14 bg-white border-t border-slate-200/90 px-3 flex items-center justify-around gap-2 z-40 shrink-0 shadow-[0_-4px_20px_rgba(15,23,42,0.06)]">
+        <button
+          onClick={() => setMobileView('map')}
+          className={`flex-1 py-2 px-3 rounded-xl font-extrabold text-xs flex items-center justify-center gap-1.5 transition ${
+            mobileView === 'map'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'bg-slate-100 text-slate-600'
+          }`}
+        >
+          <MapIcon className="w-4 h-4" />
+          <span>Ver Croquis / Mapa</span>
+        </button>
+
+        <button
+          onClick={() => setMobileView('directory')}
+          className={`flex-1 py-2 px-3 rounded-xl font-extrabold text-xs flex items-center justify-center gap-1.5 transition ${
+            mobileView === 'directory'
+              ? 'bg-slate-900 text-white shadow-sm'
+              : 'bg-slate-100 text-slate-600'
+          }`}
+        >
+          <ListFilter className="w-4 h-4" />
+          <span>Buscar / Directorio ({totalFound})</span>
+        </button>
+      </nav>
 
       {/* QR Codes Modal */}
       <QrModalAndGenerator

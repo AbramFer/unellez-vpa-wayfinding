@@ -336,7 +336,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   };
 
   return (
-    <div className="absolute top-5 right-5 z-30 w-[355px] sm:w-[385px] max-h-[calc(100vh-110px)] overflow-y-auto bg-white rounded-3xl shadow-[0_20px_60px_rgba(15,23,42,0.2)] border border-slate-200 p-5 flex flex-col gap-3.5">
+    <div className="absolute inset-x-2.5 bottom-2.5 md:inset-x-auto md:bottom-auto md:top-5 md:right-5 z-30 w-auto md:w-[385px] max-h-[65dvh] md:max-h-[calc(100dvh-110px)] overflow-y-auto bg-white rounded-3xl shadow-[0_20px_60px_rgba(15,23,42,0.2)] border border-slate-200 p-4 sm:p-5 flex flex-col gap-3.5">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-100 pb-3">
         <div>

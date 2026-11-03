@@ -445,11 +445,36 @@ export const InteractiveAerialMap: React.FC<InteractiveMapProps> = ({
     setIsPanning(false);
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1 && !draggingBlock && !draggingStation) {
+      const t = e.touches[0];
+      setIsPanning(true);
+      setPanStart({ x: t.clientX - pan.x, y: t.clientY - pan.y });
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (isPanning && e.touches.length === 1) {
+      const t = e.touches[0];
+      setPan({
+        x: t.clientX - panStart.x,
+        y: t.clientY - panStart.y,
+      });
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setIsPanning(false);
+  };
+
   return (
     <div
-      className="relative flex-1 h-full bg-[#EEF2F6] overflow-hidden flex items-center justify-center p-2 sm:p-5 select-none"
+      className="relative flex-1 w-full h-full bg-[#EEF2F6] overflow-hidden flex items-center justify-center p-1.5 sm:p-5 select-none touch-none"
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Interactive Vertical Architectural Canvas (760 x 1020 aspect ratio matching the sketch) */}
       <div
@@ -462,12 +487,12 @@ export const InteractiveAerialMap: React.FC<InteractiveMapProps> = ({
               : 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
         onMouseDown={(e) => {
-          if (!draggingBlock && !draggingStation && e.target === e.currentTarget) {
+          if (!draggingBlock && !draggingStation) {
             setIsPanning(true);
             setPanStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
           }
         }}
-        className="relative h-full max-h-[88vh] aspect-[760/1020] wayfinding-grid-bg rounded-[28px] shadow-[0_20px_50px_rgba(15,23,42,0.1)] border border-slate-200 overflow-hidden"
+        className="relative w-full h-full md:w-auto md:h-full md:max-h-[88vh] aspect-[760/1020] wayfinding-grid-bg rounded-2xl md:rounded-[28px] shadow-[0_20px_50px_rgba(15,23,42,0.1)] border border-slate-200 overflow-hidden"
       >
         {/* Optional Background Overlay (Aerial or User Sketch) */}
         {bgMode === 'aerial' && (
@@ -1032,10 +1057,16 @@ export const InteractiveAerialMap: React.FC<InteractiveMapProps> = ({
       </div>
 
       {/* ==========================================================
-          FLOATING RIGHT DETAIL CARD (For Selected Office Box OR Tour Station)
+          RESPONSIVE DETAIL CARD (Bottom Sheet on Mobile, Right Card on Desktop)
          ========================================================== */}
       {selected && !isAdminMode && (
-        <div className="absolute top-5 right-5 z-30 w-[335px] sm:w-[365px] max-h-[calc(100vh-120px)] overflow-y-auto bg-white rounded-3xl shadow-[0_20px_60px_rgba(15,23,42,0.18)] border border-slate-100 p-5 animate-in fade-in slide-in-from-right-4 duration-200">
+        <div
+          onTouchStart={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
+          className="absolute inset-x-2.5 bottom-2.5 md:inset-x-auto md:bottom-auto md:top-5 md:right-5 z-30 w-auto md:w-[365px] max-h-[54dvh] md:max-h-[calc(100dvh-120px)] overflow-y-auto bg-white rounded-3xl shadow-[0_20px_60px_rgba(15,23,42,0.24)] border border-slate-200/90 p-4 sm:p-5 animate-in fade-in slide-in-from-bottom-4 md:slide-in-from-right-4 duration-200"
+        >
+          {/* Mobile Pull-Bar Indicator */}
+          <div className="md:hidden w-10 h-1 rounded-full bg-slate-200 mx-auto mb-2.5" />
           {selected.type === 'block' ? (
             <>
               {/* Office / Parking Box Detail */}
@@ -1247,8 +1278,11 @@ export const InteractiveAerialMap: React.FC<InteractiveMapProps> = ({
         </div>
       )}
 
-      {/* Floating Bottom-Right Zoom Pill */}
-      <div className="absolute bottom-5 right-5 z-20 bg-white rounded-2xl shadow-[0_10px_30px_rgba(15,23,42,0.1)] border border-slate-200/80 flex flex-col overflow-hidden">
+      {/* Floating Top-Right (Mobile) / Bottom-Right (Desktop) Zoom Pill */}
+      <div
+        onTouchStart={(e) => e.stopPropagation()}
+        className="absolute top-3 right-3 md:top-auto md:bottom-5 md:right-5 z-20 bg-white/95 backdrop-blur-sm rounded-2xl shadow-[0_10px_30px_rgba(15,23,42,0.1)] border border-slate-200/80 flex flex-col overflow-hidden"
+      >
         <button
           onClick={() => setZoom((z) => Math.min(2.4, Number((z + 0.15).toFixed(2))))}
           className="p-3 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition border-b border-slate-100"
